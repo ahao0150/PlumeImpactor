@@ -1,0 +1,16 @@
+[package]
+name = "plumesign"
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+plist.workspace = true
+ldid2 = { path = "../../crates/ldid2" }
+grand_slam = { path = "../../crates/grand_slam", features = ["vendored-botan"] }
+types = { path = "../../crates/types"}
+
+clap = { version = "4.5", features = ["derive"] }
+openssl = { version = "0.10", features = ["vendored"] }

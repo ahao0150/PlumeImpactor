@@ -1,0 +1,36 @@
+[package]
+name = "grand_slam"
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[package.metadata.patch]
+crates = ["srp"]
+
+[dependencies]
+tokio.workspace = true
+plist.workspace = true
+uuid.workspace = true
+reqwest.workspace = true
+omnisette.workspace = true
+serde_json.workspace = true
+errors = { path = "../errors" }
+
+rustls = { version = "0.23.32", features = ["ring"] }
+serde = { version = "1", features = ["derive"] }
+
+cbc = { version = "0.1.2", features = ["std"] }
+hmac = "0.12.1"
+pbkdf2 = "0.11"
+sha2 = "0.10"
+rand = "0.9"
+srp = "0.6.0"
+aes = "0.8.2"
+botan = "0.12.0"
+base64 = "0.22"
+
+[features]
+default = []
+vendored-botan = ["botan/vendored"]
