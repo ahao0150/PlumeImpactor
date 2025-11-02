@@ -1,0 +1,51 @@
+name: "Build"
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+  release:
+    types: [published]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - ubuntu-22.04
+          - windows-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ matrix.platform }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ (matrix.platform == 'macos-latest') && 'aarch64-apple-darwin' || '' }}
+
+      - name: Setup Windows dependencies
+        if: runner.os == 'Windows'
+        run: choco install strawberryperl make --no-progress
+
+      - name: Setup MSVC environment
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build
+        run: cargo build --bin plumeimpactor --release
