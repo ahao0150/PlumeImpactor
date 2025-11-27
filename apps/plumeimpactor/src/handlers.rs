@@ -140,6 +140,8 @@ impl PlumeFrameMessageHandler {
 
                 self.package_selected = None;
                 self.plume_frame.install_page.panel.hide();
+                self.plume_frame.work_page.panel.hide();
+                self.plume_frame.work_page.set_status_text("Idle");
                 self.plume_frame.default_page.panel.show(true);
                 self.plume_frame.frame.layout();
                 self.signer_settings = SignerOptions::default();
@@ -206,7 +208,7 @@ impl PlumeFrameMessageHandler {
                 self.plume_frame.work_page.set_status_text(&status_text);
             }
             PlumeFrameMessage::WorkEnded => {
-                self.plume_frame.work_page.set_status_text("All Done!!");
+                self.plume_frame.work_page.set_status_text("Done.");
                 self.plume_frame.work_page.enable_back_button(true);
             }
             PlumeFrameMessage::Error(error_msg) => {

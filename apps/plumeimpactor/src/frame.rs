@@ -523,12 +523,9 @@ impl PlumeFrame {
         // MARK: Work Page Handlers
 
         self.work_page.set_back_handler({
-            let work_page = self.work_page.clone();
-            let install_page = self.install_page.clone();
+            let sender = sender.clone();
             move || {
-                work_page.panel.hide();
-                work_page.set_status_text("Idle");
-                install_page.panel.show(true);
+                sender.send(PlumeFrameMessage::PackageDeselected).ok();
             }
         });
         
