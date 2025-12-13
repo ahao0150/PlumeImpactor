@@ -63,6 +63,7 @@ pub struct SignerFeatures {
     pub support_ipad_fullscreen: bool,
     pub support_game_mode: bool,
     pub support_pro_motion: bool,
+    pub support_liquid_glass: bool,
     pub remove_url_schemes: bool,
 }
 
@@ -110,6 +111,7 @@ pub enum SignerApp {
     LiveContainer,
     LiveContainerAndSideStore,
     StikDebug,
+    SparseBox
 }
 
 impl SignerApp {
@@ -122,6 +124,7 @@ impl SignerApp {
             Some("com.SideStore.SideStore") => SignerApp::SideStore,
             Some("com.rileytestut.AltStore") => SignerApp::AltStore,
             Some("com.stik.js") => SignerApp::StikDebug,
+            Some("com.kdt.SparseBox") => SignerApp::SparseBox,
             _ => SignerApp::Default,
         }
     }
@@ -133,7 +136,7 @@ impl SignerApp {
     pub fn pairing_file_path(&self) -> Option<&'static str> {
         use SignerApp::*;
         match self {
-            Antrag | Feather | Protokolle | StikDebug => Some("/Documents/pairingFile.plist"),
+            Antrag | Feather | Protokolle | StikDebug | SparseBox => Some("/Documents/pairingFile.plist"),
             SideStore => Some("/Documents/ALTPairingFile.mobiledevicepairing"),
             LiveContainerAndSideStore => Some("/Documents/SideStore/Documents/ALTPairingFile.mobiledevicepairing"),
             _ => None,
