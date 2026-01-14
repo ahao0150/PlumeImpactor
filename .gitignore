@@ -8,3 +8,5 @@
 state.plist
 .zsign_cache
 cargo-sources.json
+*claude*-cwd
+.claude

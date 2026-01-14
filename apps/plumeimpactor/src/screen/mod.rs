@@ -12,7 +12,7 @@ use iced::window;
 use iced::{Element, Subscription, Task};
 
 use plume_store::AccountStore;
-use plume_utils::{Device, SignerOptions};
+use plume_utils::{Device, SignerOptions, Language, t};
 
 use crate::subscriptions;
 use crate::tray::ImpactorTray;
@@ -59,6 +59,9 @@ pub enum Message {
 
     // Installation
     StartInstallation,
+
+    // Language
+    LanguageChanged(Language),
 }
 
 pub struct Impactor {
@@ -389,6 +392,11 @@ impl Impactor {
                             self.login_windows.insert(id, login_window);
                             task.map(move |msg| Message::LoginWindowMessage(id, msg))
                         }
+                        settings::Message::LanguageChanged(lang) => {
+                            let _ = screen.update(settings::Message::LanguageChanged(lang));
+                            self.account_store = Some(Self::init_account_store_sync());
+                            Task::done(Message::LanguageChanged(lang))
+                        }
                         _ => {
                             let task = screen.update(msg);
                             self.account_store = Some(Self::init_account_store_sync());
@@ -445,6 +453,22 @@ impl Impactor {
                 }
             }
             Message::StartInstallation => Task::none(),
+            Message::LanguageChanged(language) => {
+                plume_utils::set_language(language);
+                // Force refresh current screen
+                match &self.current_screen {
+                    ImpactorScreen::Main(_) => {
+                        self.navigate_to_screen(ImpactorScreenType::Main);
+                    }
+                    ImpactorScreen::Settings(_) => {
+                        let account_store = Some(Self::init_account_store_sync());
+                        self.current_screen =
+                            ImpactorScreen::Settings(settings::SettingsScreen::new(account_store));
+                    }
+                    _ => {}
+                }
+                Task::none()
+            }
         }
     }
 
@@ -536,10 +560,11 @@ impl Impactor {
     fn view_top_bar(&self) -> Element<'_, Message> {
         let device_names: Vec<String> = self.devices.iter().map(|d| d.to_string()).collect();
         let selected_device_name = self.selected_device.as_ref().map(|d| d.to_string());
+        let no_device_str = t("no_device");
         let placeholder_str = selected_device_name
             .as_ref()
             .map(String::as_str)
-            .unwrap_or("No Device");
+            .unwrap_or(&no_device_str);
 
         let right_button = if matches!(self.current_screen, ImpactorScreen::Settings(_)) {
             button(text("←").align_x(Center))

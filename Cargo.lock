@@ -5724,6 +5724,7 @@ dependencies = [
  "goblin",
  "idevice",
  "log",
+ "once_cell",
  "plist",
  "plume_core",
  "thiserror 2.0.17",

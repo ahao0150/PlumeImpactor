@@ -1,7 +1,8 @@
-use iced::widget::{button, column, container, row, text};
-use iced::{Alignment, Center, Element, Fill, Task};
+use iced::widget::{button, column, container, row, text, pick_list};
+use iced::{Alignment, Center, Element, Fill, Length, Task};
 use iced_aw::SelectionList;
 use plume_store::AccountStore;
+use plume_utils::{Language, t};
 
 use crate::appearance;
 
@@ -11,16 +12,22 @@ pub enum Message {
     SelectAccount(usize),
     RemoveAccount(usize),
     ExportP12,
+    LanguageChanged(Language),
 }
 
 #[derive(Debug)]
 pub struct SettingsScreen {
     pub account_store: Option<AccountStore>,
+    selected_language: Language,
 }
 
 impl SettingsScreen {
     pub fn new(account_store: Option<AccountStore>) -> Self {
-        Self { account_store }
+        let current_language = plume_utils::get_language();
+        Self {
+            account_store,
+            selected_language: current_language,
+        }
     }
 
     pub fn update(&mut self, message: Message) -> Task<Message> {
@@ -64,13 +71,19 @@ impl SettingsScreen {
                 }
                 Task::none()
             }
+            Message::LanguageChanged(language) => {
+                self.selected_language = language;
+                // Note: Language change will be handled by parent screen
+                // We return None here and let parent handle the actual language change
+                Task::none()
+            }
             Message::ShowLogin => Task::none(),
         }
     }
 
     pub fn view(&self) -> Element<'_, Message> {
         let Some(store) = &self.account_store else {
-            return column![text("Loading accounts...")]
+            return column![text(t("loading_accounts"))]
                 .spacing(appearance::THEME_PADDING)
                 .padding(appearance::THEME_PADDING)
                 .into();
@@ -85,14 +98,38 @@ impl SettingsScreen {
 
         let mut content = column![].spacing(appearance::THEME_PADDING);
 
+        // Language selector
+        content = content.push(self.view_language_selector());
+
+        // Accounts section
+        content = content.push(text(t("accounts")));
+
         if !accounts.is_empty() {
             content = content.push(self.view_account_list(&accounts, selected_index));
         } else {
-            content = content.push(text("No accounts added yet"));
+            content = content.push(text(t("no_accounts_added")));
         }
 
         content = content.push(self.view_account_buttons(selected_index));
         content.into()
+    }
+
+    fn view_language_selector(&self) -> Element<'_, Message> {
+        let languages: Vec<Language> = vec![Language::English, Language::Chinese];
+        let language_names: Vec<String> = languages.iter().map(|l| l.as_str().to_string()).collect();
+        let selected_lang = self.selected_language.as_str().to_string();
+
+        row![
+            text(t("language")).width(Fill),
+            pick_list(language_names, Some(selected_lang), |lang_str| {
+                Message::LanguageChanged(Language::from_str(&lang_str))
+            })
+            .width(Length::Fixed(200.0))
+        ]
+        .spacing(appearance::THEME_PADDING)
+        .align_y(Alignment::Center)
+        .padding(appearance::THEME_PADDING)
+        .into()
     }
 
     fn view_account_list(
@@ -146,7 +183,7 @@ impl SettingsScreen {
 
     fn view_account_buttons(&self, selected_index: Option<usize>) -> Element<'_, Message> {
         let mut buttons = row![
-            button(text("Add Account").align_x(Center))
+            button(text(t("add_account")).align_x(Center))
                 .on_press(Message::ShowLogin)
                 .style(appearance::s_button)
         ]
@@ -155,12 +192,12 @@ impl SettingsScreen {
         if let Some(index) = selected_index {
             buttons = buttons
                 .push(
-                    button(text("Remove Selected").align_x(Center))
+                    button(text(t("remove_selected")).align_x(Center))
                         .on_press(Message::RemoveAccount(index))
                         .style(appearance::s_button),
                 )
                 .push(
-                    button(text("Export P12").align_x(Center))
+                    button(text(t("export_p12")).align_x(Center))
                         .on_press(Message::ExportP12)
                         .style(appearance::s_button),
                 );

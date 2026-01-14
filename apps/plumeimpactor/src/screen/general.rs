@@ -1,6 +1,6 @@
 use iced::widget::{button, column, container, image, row, text};
 use iced::{Center, Color, Element, Fill, Task};
-use plume_utils::Package;
+use plume_utils::{Package, t};
 
 use crate::appearance;
 use std::sync::OnceLock;
@@ -31,9 +31,11 @@ impl GeneralScreen {
     pub fn update(&mut self, message: Message) -> Task<Message> {
         match message {
             Message::OpenFileDialog => {
+                let filter_name = t("ios_app_package");
+                let title = t("select_ipa_tipa_file");
                 let path = rfd::FileDialog::new()
-                    .add_filter("iOS App Package", &["ipa", "tipa"])
-                    .set_title("Select IPA/TIPA file")
+                    .add_filter(&filter_name, &["ipa", "tipa"])
+                    .set_title(&title)
                     .pick_file();
                 Task::done(Message::FileSelected(path))
             }
@@ -73,7 +75,7 @@ impl GeneralScreen {
         let screen_content = image(image_handle.clone()).height(INSTALL_IMAGE_HEIGHT);
 
         let footer_links =
-            button(text("Give me a ⭐ star :3").color(Color::from_rgb(1.0, 0.75, 0.8)))
+            button(text(t("give_star")).color(Color::from_rgb(1.0, 0.75, 0.8)))
                 .on_press(Message::OpenGitHub)
                 .style(iced::widget::button::text);
 
@@ -88,11 +90,11 @@ impl GeneralScreen {
     fn view_buttons(&self) -> Element<'_, Message> {
         container(
             row![
-                button(text("Device Utilities").align_x(Center))
+                button(text(t("device_utilities")).align_x(Center))
                     .on_press(Message::NavigateToUtilities)
                     .width(Fill)
                     .style(appearance::s_button),
-                button(text("Import .ipa / .tipa").align_x(Center))
+                button(text(t("import_ipa")).align_x(Center))
                     .on_press(Message::OpenFileDialog)
                     .width(Fill)
                     .style(appearance::s_button)
