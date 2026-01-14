@@ -5701,6 +5701,9 @@ dependencies = [
 [[package]]
 name = "plume_gestalt"
 version = "1.4.1"
+dependencies = [
+ "core-foundation-sys",
+]
 
 [[package]]
 name = "plume_store"

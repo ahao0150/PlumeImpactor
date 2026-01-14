@@ -8,3 +8,13 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+core-foundation-sys = "0.8"
+
+[lib]
+# Only build on Apple platforms
+path = "src/lib.rs"
+
+[package.metadata.docs.rs]
+targets = ["x86_64-apple-darwin", "aarch64-apple-darwin"]
