@@ -55,6 +55,10 @@ pub mod keys {
     pub const VERSION: &str = "version";
     pub const SIGNING_OPTIONS: &str = "signing_options";
     pub const INSTALL_OPTIONS: &str = "install_options";
+    pub const APP_NAME_PLACEHOLDER: &str = "app_name";
+    pub const BUNDLE_IDENTIFIER: &str = "bundle_identifier";
+    pub const GENERAL: &str = "general";
+    pub const ADVANCED: &str = "advanced";
 
     // Checkbox labels
     pub const SUPPORT_OLDER_VERSIONS: &str = "support_older_versions";
@@ -76,6 +80,24 @@ pub mod keys {
     pub const TWEAKS: &str = "tweaks";
     pub const ADD_TWEAK: &str = "add_tweak";
     pub const REMOVE_TWEAK: &str = "remove_tweak";
+    pub const ADD_BUNDLE: &str = "add_bundle";
+    pub const NO_TWEAKS_ADDED: &str = "no_tweaks_added";
+    pub const REMOVE: &str = "remove";
+
+    // Package Screen
+    pub const NO_PACKAGE_SELECTED: &str = "no_package_selected";
+    pub const GO_BACK_SELECT_FILE: &str = "go_back_select_file";
+    pub const MODE: &str = "mode";
+    pub const SELECT_MODE: &str = "select_mode";
+    pub const SIGNING_METHOD: &str = "signing_method";
+    pub const SELECT_SIGNING_METHOD: &str = "select_signing_method";
+    pub const SIGN_ONLY_DESCRIPTION: &str = "sign_only_description";
+    pub const INSTALL_DESCRIPTION: &str = "install_description";
+
+    // Tweak File Dialog
+    pub const TWEAK_FILES: &str = "tweak_files";
+    pub const SELECT_TWEAK_FILE: &str = "select_tweak_file";
+    pub const SELECT_BUNDLE_FOLDER: &str = "select_bundle_folder";
 
     // Settings Screen
     pub const ACCOUNTS: &str = "accounts";
@@ -221,6 +243,10 @@ impl I18n {
             keys::VERSION => "Version:",
             keys::SIGNING_OPTIONS => "Signing Options",
             keys::INSTALL_OPTIONS => "Install Options",
+            keys::APP_NAME_PLACEHOLDER => "App name",
+            keys::BUNDLE_IDENTIFIER => "Bundle identifier",
+            keys::GENERAL => "General:",
+            keys::ADVANCED => "Advanced:",
 
             // Checkbox labels
             keys::SUPPORT_OLDER_VERSIONS => "Support older versions (7+)",
@@ -242,6 +268,24 @@ impl I18n {
             keys::TWEAKS => "Tweaks",
             keys::ADD_TWEAK => "Add Tweak",
             keys::REMOVE_TWEAK => "Remove Tweak",
+            keys::ADD_BUNDLE => "Add Bundle",
+            keys::NO_TWEAKS_ADDED => "No tweaks added",
+            keys::REMOVE => "Remove",
+
+            // Package Screen
+            keys::NO_PACKAGE_SELECTED => "No package selected",
+            keys::GO_BACK_SELECT_FILE => "Go back and select a file",
+            keys::MODE => "Mode:",
+            keys::SELECT_MODE => "Select mode",
+            keys::SIGNING_METHOD => "Signing:",
+            keys::SELECT_SIGNING_METHOD => "Select signing method",
+            keys::SIGN_ONLY_DESCRIPTION => "Sign and export (no installation)",
+            keys::INSTALL_DESCRIPTION => "Sign and install to device",
+
+            // Tweak File Dialog
+            keys::TWEAK_FILES => "Tweak files",
+            keys::SELECT_TWEAK_FILE => "Select Tweak File",
+            keys::SELECT_BUNDLE_FOLDER => "Select Bundle Folder",
 
             // Settings Screen
             keys::ACCOUNTS => "Accounts",
@@ -313,6 +357,10 @@ impl I18n {
             keys::VERSION => "版本：",
             keys::SIGNING_OPTIONS => "签名选项",
             keys::INSTALL_OPTIONS => "安装选项",
+            keys::APP_NAME_PLACEHOLDER => "应用名称",
+            keys::BUNDLE_IDENTIFIER => "Bundle 标识符",
+            keys::GENERAL => "常规：",
+            keys::ADVANCED => "高级：",
 
             // Checkbox labels
             keys::SUPPORT_OLDER_VERSIONS => "支持旧版本 (7+)",
@@ -334,6 +382,24 @@ impl I18n {
             keys::TWEAKS => "Tweaks",
             keys::ADD_TWEAK => "添加 Tweak",
             keys::REMOVE_TWEAK => "移除 Tweak",
+            keys::ADD_BUNDLE => "添加 Bundle",
+            keys::NO_TWEAKS_ADDED => "未添加 Tweak",
+            keys::REMOVE => "移除",
+
+            // Package Screen
+            keys::NO_PACKAGE_SELECTED => "未选择包",
+            keys::GO_BACK_SELECT_FILE => "返回并选择文件",
+            keys::MODE => "模式：",
+            keys::SELECT_MODE => "选择模式",
+            keys::SIGNING_METHOD => "签名：",
+            keys::SELECT_SIGNING_METHOD => "选择签名方式",
+            keys::SIGN_ONLY_DESCRIPTION => "签名并导出（不安装）",
+            keys::INSTALL_DESCRIPTION => "签名并安装到设备",
+
+            // Tweak File Dialog
+            keys::TWEAK_FILES => "Tweak 文件",
+            keys::SELECT_TWEAK_FILE => "选择 Tweak 文件",
+            keys::SELECT_BUNDLE_FOLDER => "选择 Bundle 文件夹",
 
             // Settings Screen
             keys::ACCOUNTS => "账户",

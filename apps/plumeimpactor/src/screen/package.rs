@@ -2,7 +2,7 @@ use iced::widget::{
     button, checkbox, column, container, pick_list, row, scrollable, text, text_input,
 };
 use iced::{Alignment, Center, Element, Fill, Length, Task};
-use plume_utils::{Package, PlistInfoTrait, SignerInstallMode, SignerMode, SignerOptions};
+use plume_utils::{Package, PlistInfoTrait, SignerInstallMode, SignerMode, SignerOptions, t};
 
 use crate::appearance;
 
@@ -122,9 +122,11 @@ impl PackageScreen {
                 Task::none()
             }
             Message::AddTweak => {
+                let filter_name = t("tweak_files");
+                let title = t("select_tweak_file");
                 let path = rfd::FileDialog::new()
-                    .add_filter("Tweak files", &["deb", "dylib"])
-                    .set_title("Select Tweak File")
+                    .add_filter(&filter_name, &["deb", "dylib"])
+                    .set_title(&title)
                     .pick_file();
 
                 if let Some(path) = path {
@@ -137,8 +139,9 @@ impl PackageScreen {
                 Task::none()
             }
             Message::AddBundle => {
+                let title = t("select_bundle_folder");
                 let path = rfd::FileDialog::new()
-                    .set_title("Select Bundle Folder")
+                    .set_title(&title)
                     .pick_folder();
 
                 if let Some(path) = path {
@@ -189,8 +192,8 @@ impl PackageScreen {
 
     fn view_no_package(&self) -> Element<'_, Message> {
         column![
-            text("No package selected").size(32),
-            text("Go back and select a file").size(16),
+            text(t("no_package_selected")).size(32),
+            text(t("go_back_select_file")).size(16),
         ]
         .spacing(appearance::THEME_PADDING)
         .align_x(Center)
@@ -203,34 +206,34 @@ impl PackageScreen {
         let pkg_ver = pkg.get_version().unwrap_or_default();
 
         column![
-            text("Name:").size(12),
+            text(t("name")).size(12),
             text_input(
-                "App name",
+                &t("app_name_placeholder"),
                 self.options.custom_name.as_ref().unwrap_or(&pkg_name)
             )
             .on_input(Message::UpdateCustomName)
             .padding(8),
-            text("Identifier:").size(12),
+            text(t("identifier")).size(12),
             text_input(
-                "Bundle identifier",
+                &t("bundle_identifier"),
                 self.options.custom_identifier.as_ref().unwrap_or(&pkg_id)
             )
             .on_input(Message::UpdateCustomIdentifier)
             .padding(8),
-            text("Version:").size(12),
+            text(t("version")).size(12),
             text_input(
-                "Version",
+                &t("version"),
                 self.options.custom_version.as_ref().unwrap_or(&pkg_ver)
             )
             .on_input(Message::UpdateCustomVersion)
             .padding(8),
-            text("Tweaks:").size(12),
+            text(t("tweaks")).size(12),
             self.view_tweaks(),
             row![
-                button(text("Add Tweak").align_x(Center))
+                button(text(t("add_tweak")).align_x(Center))
                     .on_press(Message::AddTweak)
                     .style(appearance::p_button),
-                button(text("Add Bundle").align_x(Center))
+                button(text(t("add_bundle")).align_x(Center))
                     .on_press(Message::AddBundle)
                     .style(appearance::p_button),
             ]
@@ -243,45 +246,45 @@ impl PackageScreen {
 
     fn view_options_column(&self) -> Element<'_, Message> {
         column![
-            text("General:").size(12),
+            text(t("general")).size(12),
             checkbox(self.options.features.support_minimum_os_version)
-                .label("Support older versions (7+)")
+                .label(t("support_older_versions"))
                 .on_toggle(Message::ToggleMinimumOsVersion),
             checkbox(self.options.features.support_file_sharing)
-                .label("Force File Sharing")
+                .label(t("force_file_sharing"))
                 .on_toggle(Message::ToggleFileSharing),
             checkbox(self.options.features.support_ipad_fullscreen)
-                .label("Force iPad Fullscreen")
+                .label(t("force_ipad_fullscreen"))
                 .on_toggle(Message::ToggleIpadFullscreen),
             checkbox(self.options.features.support_game_mode)
-                .label("Force Game Mode")
+                .label(t("force_game_mode"))
                 .on_toggle(Message::ToggleGameMode),
             checkbox(self.options.features.support_pro_motion)
-                .label("Force Pro Motion")
+                .label(t("force_pro_motion"))
                 .on_toggle(Message::ToggleProMotion),
-            text("Advanced:").size(12),
+            text(t("advanced")).size(12),
             checkbox(self.options.embedding.single_profile)
-                .label("Only Register Main Bundle")
+                .label(t("only_register_main_bundle"))
                 .on_toggle(Message::ToggleSingleProfile),
             checkbox(self.options.features.support_liquid_glass)
-                .label("Force Liquid Glass (26+)")
+                .label(t("force_liquid_glass"))
                 .on_toggle(Message::ToggleLiquidGlass),
-            text("Mode:").size(12),
+            text(t("mode")).size(12),
             pick_list(
                 &[SignerInstallMode::Install, SignerInstallMode::Export][..],
                 Some(self.options.install_mode),
                 Message::UpdateInstallMode
             )
             .style(appearance::s_pick_list)
-            .placeholder("Select mode"),
-            text("Signing:").size(12),
+            .placeholder(&t("select_mode")),
+            text(t("signing_method")).size(12),
             pick_list(
                 &[SignerMode::Pem, SignerMode::Adhoc, SignerMode::None][..],
                 Some(self.options.mode),
                 Message::UpdateSignerMode
             )
             .style(appearance::s_pick_list)
-            .placeholder("Select signing method"),
+            .placeholder(&t("select_signing_method")),
         ]
         .spacing(8)
         .width(Fill)
@@ -290,13 +293,13 @@ impl PackageScreen {
 
     fn view_buttons(&self, has_device: bool) -> Element<'_, Message> {
         let (button_enabled, button_label) = match self.options.install_mode {
-            SignerInstallMode::Install => (has_device, "Install"),
-            SignerInstallMode::Export => (true, "Export"),
+            SignerInstallMode::Install => (has_device, t("install")),
+            SignerInstallMode::Export => (true, t("export")),
         };
 
         container(
             row![
-                button(text("Back").align_x(Center))
+                button(text(t("back")).align_x(Center))
                     .on_press(Message::Back)
                     .style(appearance::s_button)
                     .width(Fill),
@@ -316,7 +319,7 @@ impl PackageScreen {
 
         if let Some(tweaks) = tweaks {
             if tweaks.is_empty() {
-                return text("No tweaks added").size(12).into();
+                return text(t("no_tweaks_added")).size(12).into();
             }
 
             let mut tweak_list = column![].spacing(4);
@@ -326,7 +329,7 @@ impl PackageScreen {
                     text(tweak.file_name().and_then(|n| n.to_str()).unwrap_or("???"))
                         .size(12)
                         .width(Fill),
-                    button(text("Remove").align_x(Center))
+                    button(text(t("remove")).align_x(Center))
                         .on_press(Message::RemoveTweak(i))
                         .style(appearance::p_button)
                         .padding(6)
@@ -339,7 +342,7 @@ impl PackageScreen {
 
             scrollable(tweak_list).height(Length::Fixed(100.0)).into()
         } else {
-            text("No tweaks added").size(12).into()
+            text(t("no_tweaks_added")).size(12).into()
         }
     }
 }
