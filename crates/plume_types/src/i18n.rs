@@ -55,7 +55,7 @@ pub mod keys {
     pub const VERSION: &str = "version";
     pub const SIGNING_OPTIONS: &str = "signing_options";
     pub const INSTALL_OPTIONS: &str = "install_options";
-    pub const APP_NAME_PLACEHOLDER: &str = "app_name";
+    pub const APP_NAME_PLACEHOLDER: &str = "app_name_placeholder";
     pub const BUNDLE_IDENTIFIER: &str = "bundle_identifier";
     pub const GENERAL: &str = "general";
     pub const ADVANCED: &str = "advanced";
@@ -159,10 +159,15 @@ impl I18n {
             use std::process::Command;
 
             if let Ok(output) = Command::new("powershell")
-                .args(["-Command", "Get-UICulture | Select-Object -ExpandProperty Name"])
+                .args([
+                    "-Command",
+                    "Get-UICulture | Select-Object -ExpandProperty Name",
+                ])
                 .output()
             {
-                let locale = String::from_utf8_lossy(&output.stdout).trim().to_lowercase();
+                let locale = String::from_utf8_lossy(&output.stdout)
+                    .trim()
+                    .to_lowercase();
                 if locale.contains("zh") || locale.contains("chinese") {
                     return Language::Chinese;
                 }

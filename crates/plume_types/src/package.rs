@@ -98,7 +98,11 @@ impl Package {
         let zip_file_path = self.stage_dir.join("resigned.ipa");
         let file = fs::File::create(&zip_file_path)?;
         let mut zip = zip::ZipWriter::new(file);
-        let options = FileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+
+        let options = FileOptions::default()
+            .compression_method(zip::CompressionMethod::Deflated)
+            .unix_permissions(0o755)
+            .large_file(false);
 
         let payload_dir = self.stage_payload_dir;
 
@@ -108,17 +112,26 @@ impl Package {
             prefix: &PathBuf,
             options: &FileOptions<'_, zip::write::ExtendedFileOptions>,
         ) -> Result<(), Error> {
-            for entry in fs::read_dir(path)? {
-                let entry = entry?;
+            let mut entries: Vec<_> = fs::read_dir(path)?.collect::<Result<Vec<_>, _>>()?;
+            entries.sort_by_key(|e| e.path());
+
+            for entry in entries {
                 let entry_path = entry.path();
                 let name = entry_path
                     .strip_prefix(prefix)
                     .map_err(|_| Error::PackageInfoPlistMissing)?
                     .to_string_lossy()
+                    .replace('\\', "/")
                     .to_string();
 
                 if entry_path.is_file() {
-                    zip.start_file(&name, options.clone())?;
+                    let file_options =
+                        if entry_path.extension().and_then(|e| e.to_str()) == Some("sh") {
+                            options.clone().unix_permissions(0o755)
+                        } else {
+                            options.clone().unix_permissions(0o644)
+                        };
+                    zip.start_file(&name, file_options)?;
                     let mut f = fs::File::open(&entry_path)?;
                     std::io::copy(&mut f, zip)?;
                 } else if entry_path.is_dir() {

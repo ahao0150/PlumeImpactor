@@ -12,7 +12,7 @@ use iced::window;
 use iced::{Element, Subscription, Task};
 
 use plume_store::AccountStore;
-use plume_utils::{Device, SignerOptions, Language, t};
+use plume_utils::{Device, Language, SignerOptions, t};
 
 use crate::subscriptions;
 use crate::tray::ImpactorTray;

@@ -140,9 +140,7 @@ impl PackageScreen {
             }
             Message::AddBundle => {
                 let title = t("select_bundle_folder");
-                let path = rfd::FileDialog::new()
-                    .set_title(&title)
-                    .pick_folder();
+                let path = rfd::FileDialog::new().set_title(&title).pick_folder();
 
                 if let Some(path) = path {
                     if let Some(ext) = path.extension().and_then(|e| e.to_str()) {

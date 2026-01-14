@@ -10,7 +10,7 @@ use std::path::Path;
 
 pub use bundle::{Bundle, BundleType}; // Bundle helper
 pub use device::{Device, get_device_for_id, install_app_mac}; // Device helper
-pub use i18n::{get_language, set_language, t, tf, Language}; // i18n support
+pub use i18n::{Language, get_language, set_language, t, tf}; // i18n support
 pub use options::{
     SignerApp, // Supported app types
     SignerAppReal,

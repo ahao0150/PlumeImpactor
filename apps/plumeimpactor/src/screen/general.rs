@@ -74,10 +74,9 @@ impl GeneralScreen {
 
         let screen_content = image(image_handle.clone()).height(INSTALL_IMAGE_HEIGHT);
 
-        let footer_links =
-            button(text(t("give_star")).color(Color::from_rgb(1.0, 0.75, 0.8)))
-                .on_press(Message::OpenGitHub)
-                .style(iced::widget::button::text);
+        let footer_links = button(text(t("give_star")).color(Color::from_rgb(1.0, 0.75, 0.8)))
+            .on_press(Message::OpenGitHub)
+            .style(iced::widget::button::text);
 
         column![
             container(screen_content).center(Fill).height(Fill),

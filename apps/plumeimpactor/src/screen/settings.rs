@@ -1,4 +1,4 @@
-use iced::widget::{button, column, container, row, text, pick_list};
+use iced::widget::{button, column, container, pick_list, row, text};
 use iced::{Alignment, Center, Element, Fill, Length, Task};
 use iced_aw::SelectionList;
 use plume_store::AccountStore;
@@ -116,7 +116,8 @@ impl SettingsScreen {
 
     fn view_language_selector(&self) -> Element<'_, Message> {
         let languages: Vec<Language> = vec![Language::English, Language::Chinese];
-        let language_names: Vec<String> = languages.iter().map(|l| l.as_str().to_string()).collect();
+        let language_names: Vec<String> =
+            languages.iter().map(|l| l.as_str().to_string()).collect();
         let selected_lang = self.selected_language.as_str().to_string();
 
         row![
